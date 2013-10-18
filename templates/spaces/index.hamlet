@@ -1,1 +1,11 @@
-<h1>Spaces
+<h1> Spaces
+<a href=@{NewSpaceR}> New space
+
+$if null spaces
+  <p>No spaces found
+$else
+  <ul>
+    $forall Entity spaceId space <- spaces
+      <li>
+        <a href=@{SpaceR spaceId}> #{spaceName space}
+

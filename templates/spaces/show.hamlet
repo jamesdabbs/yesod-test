@@ -1,1 +1,6 @@
-<h1>Space #{show spaceId}
+<h1>#{spaceName space}
+<a href=@{SpacesR}>All spaces
+<a href=@{EditSpaceR spaceId}>Edit space
+
+<p>#{spaceDescription space}
+

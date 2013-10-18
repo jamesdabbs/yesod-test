@@ -7,14 +7,24 @@ import Import
 
 getSpacesR :: Handler Html
 getSpacesR = do
+  spaces <- runDB $ selectList [] [Desc SpaceId]
   defaultLayout $ do
     $(widgetFile "spaces/index")
 
 postSpacesR :: Handler Html
-postSpacesR = error "Not yet implemented: postSpacesR"
+postSpacesR = do
+  ((res,form), enctype) <- runFormPost $ spaceForm Nothing
+  case res of
+    FormSuccess space -> do
+      spaceId <- runDB $ insert space
+      setMessage . toHtml $ (spaceName space) <> " created"
+      redirect $ SpaceR spaceId
+    _ -> defaultLayout $ do
+      $(widgetFile "spaces/new")
 
 getNewSpaceR :: Handler Html
 getNewSpaceR = do
+  (form, enctype) <- generateFormPost $ spaceForm Nothing
   defaultLayout $ do
     $(widgetFile "spaces/new")
 
@@ -23,9 +33,34 @@ getNewSpaceR = do
 
 getSpaceR :: SpaceId -> Handler Html
 getSpaceR spaceId = do
+  space <- runDB $ get404 spaceId
   defaultLayout $ do
+    setTitle . toHtml $ spaceName space
     $(widgetFile "spaces/show")
 
-putSpaceR :: SpaceId -> Handler Html
-putSpaceR = error "Not yet implemented: putSpaceR"
+getEditSpaceR :: SpaceId -> Handler Html
+getEditSpaceR spaceId = do
+  space <- runDB $ get404 spaceId
+  (form, enctype) <- generateFormPost $ spaceForm $ Just space
+  defaultLayout $ do
+    $(widgetFile "spaces/edit")
+
+postSpaceR :: SpaceId -> Handler Html
+postSpaceR spaceId = do
+  space <- runDB $ get404 spaceId
+  ((res,form), enctype) <- runFormPost $ spaceForm $ Just space
+  case res of
+    FormSuccess edited -> do
+      _ <- runDB $ replace spaceId edited
+      setMessage . toHtml $ (spaceName edited) <> " updated"
+      redirect $ SpaceR spaceId
+    _ -> defaultLayout $ do
+      $(widgetFile "spaces/edit")
+
+-- Helpers
+
+spaceForm :: Maybe Space -> Form Space
+spaceForm space = renderDivs $ Space
+  <$> areq textField "Name" (spaceName <$> space)
+  <*> areq textField "Description" (spaceDescription <$> space)
 
