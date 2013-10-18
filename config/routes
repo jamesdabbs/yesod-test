@@ -5,3 +5,8 @@
 /robots.txt RobotsR GET
 
 / HomeR GET POST
+
+/spaces          SpacesR   GET POST
+/!spaces/new     NewSpaceR GET
+/spaces/#SpaceId SpaceR    GET PUT
+
