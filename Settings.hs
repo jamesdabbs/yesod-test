@@ -17,6 +17,7 @@ import Control.Applicative
 import Settings.Development
 import Data.Default (def)
 import Text.Hamlet
+import Text.Coffee
 
 -- | Which Persistent backend this site is using.
 type PersistConf = SqliteConf
@@ -50,12 +51,15 @@ staticRoot conf = [st|#{appRoot conf}/static|]
 -- For more information on modifying behavior, see:
 --
 -- https://github.com/yesodweb/yesod/wiki/Overriding-widgetFile
+-- widgetFileSettings = def
+--     { wfsHamletSettings = defaultHamletSettings
+--         { hamletNewlines = AlwaysNewlines
+--         }
+--     }
 widgetFileSettings :: WidgetFileSettings
-widgetFileSettings = def
-    { wfsHamletSettings = defaultHamletSettings
-        { hamletNewlines = AlwaysNewlines
-        }
-    }
+widgetFileSettings = def { wfsLanguages = \hset -> defaultTemplateLanguages hset ++
+    [ TemplateLanguage True  "coffee"  Text.Coffee.coffeeFile   Text.Coffee.coffeeFileReload
+    ] }
 
 -- The rest of this file contains settings which rarely need changing by a
 -- user.

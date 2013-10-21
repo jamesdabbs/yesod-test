@@ -1,10 +1,6 @@
 $newline never
-\<!doctype html>
-\<!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
-\<!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
-\<!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
-\<!--[if gt IE 8]><!-->
-<html class="no-js" lang="en"> <!--<![endif]-->
+$doctype 5
+<html class="no-js" lang="en">
     <head>
         <meta charset="UTF-8">
 
@@ -23,9 +19,9 @@ $newline never
         <script>
           document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/,'js');
     <body>
-        <div class="container">
+        <div class="container" ng-app="demo">
             <header>
-            <div id="main" role="main">
+            <div id="main" role="main" ng-view>
               ^{pageBody pc}
             <footer>
                 #{extraCopyright $ appExtra $ settings master}

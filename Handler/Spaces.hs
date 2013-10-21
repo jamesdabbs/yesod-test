@@ -3,13 +3,19 @@ module Handler.Spaces where
 import Import
 
 
+serialize :: Entity Space -> Value
+serialize (Entity spaceId space) = object
+  [ "id"          .= spaceId
+  , "name"        .= spaceName space
+  , "description" .= spaceDescription space
+  ]
+
 -- Collection
 
-getSpacesR :: Handler Html
+getSpacesR :: Handler Value
 getSpacesR = do
-  spaces <- runDB $ selectList [] [Desc SpaceId]
-  defaultLayout $ do
-    $(widgetFile "spaces/index")
+  spaces <- runDB $ selectList [] [Asc SpaceId]
+  return . array $ map serialize spaces
 
 postSpacesR :: Handler Html
 postSpacesR = do
@@ -31,12 +37,10 @@ getNewSpaceR = do
 
 -- Objects
 
-getSpaceR :: SpaceId -> Handler Html
+getSpaceR :: SpaceId -> Handler Value
 getSpaceR spaceId = do
   space <- runDB $ get404 spaceId
-  defaultLayout $ do
-    setTitle . toHtml $ spaceName space
-    $(widgetFile "spaces/show")
+  return . serialize $ Entity spaceId space
 
 getEditSpaceR :: SpaceId -> Handler Html
 getEditSpaceR spaceId = do

@@ -1,1 +1,10 @@
-document.getElementById(#{toJSON aDomId}).innerHTML = "This text was added by the Javascript part of the homepage widget.";
+angular.module("demo", []).
+config(function($routeProvider) {
+  $routeProvider.
+    when('/hello', {controller: HelloCtrl, templateUrl: 'static/hello.html'}).
+    otherwise({redirectTo: '/hello'});
+});
+
+function HelloCtrl($scope) {
+  $scope.name = "Demo"
+};
